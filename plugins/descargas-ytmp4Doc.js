@@ -26,15 +26,14 @@ let handler = async (m, { usedPrefix, command, conn, text }) => {
 *◦ AMIGOS :* ${stats.friendCount}
 *◦ DESCRIPCIÓN :* ${user.signature || 'Sin descripción'}
 *◦ REGIÓN :* ${user.region || 'Desconocida'}
-*◦ ID SEGURO :* ${user.secUid}
 *◦ CUENTA PRIVADA :* ${user.privateAccount ? '🔒 Sí' : '🔓 No'}
 *◦ VERIFICADO :* ${user.verified ? '✅ Sí' : '❌ No'}
 *◦ CUENTA COMERCIAL :* ${user.commerceUserInfo.commerceUser ? '🛒 Sí' : '❌ No'}
 *◦ DESCARGAS PERMITIDAS :* ${user.downloadSetting === 3 ? '✅ Sí' : '❌ No'}
-*◦ PUEDE EXPANDIR PLAYLIST :* ${user.canExpPlaylist ? '✅ Sí' : '❌ No'}
-*◦ MUESTRA PESTAÑA DE MÚSICA :* ${profileTab.showMusicTab ? '✅ Sí' : '❌ No'}
-*◦ MUESTRA PESTAÑA DE PREGUNTAS :* ${profileTab.showQuestionTab ? '✅ Sí' : '❌ No'}
-*◦ MUESTRA PESTAÑA DE PLAYLIST :* ${profileTab.showPlayListTab ? '✅ Sí' : '❌ No'}
+*◦ EXPANDIR PLAYLIST :* ${user.canExpPlaylist ? '✅ Sí' : '❌ No'}
+*◦ PESTAÑA DE MÚSICA :* ${profileTab.showMusicTab ? '✅ Sí' : '❌ No'}
+*◦ PESTAÑA DE PREGUNTAS :* ${profileTab.showQuestionTab ? '✅ Sí' : '❌ No'}
+*◦ PESTAÑA DE PLAYLIST :* ${profileTab.showPlayListTab ? '✅ Sí' : '❌ No'}
 *◦ ORGANIZACIÓN :* ${user.isOrganization ? '🏢 Sí' : '❌ No'}
 *◦ LENGUAJE :* ${user.language || 'Desconocido'}`
 
