@@ -46,7 +46,7 @@ const emojis = {
   "internet": "🍟",
   "anime": "🥞",
   "ephoto": "🍦",
-  "grupo": "☕",
+  "group": "☕",
   "owner": "🧇",
   "nsfw": "🪼",
 };
