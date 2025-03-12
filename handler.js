@@ -398,3 +398,142 @@ isPrems,
 chatUpdate,
 __dirname: ___dirname,
 __filename
+}
+try {
+await plugin.call(this, m, extra)
+if (!isPrems)
+m.corazones = m.corazones || plugin.corazones || false
+} catch (e) {
+m.error = e
+console.error(e)
+if (e) {
+let text = format(e)
+for (let key of Object.values(global.APIKeys))
+text = text.replace(new RegExp(key, 'g'), 'Administrador')
+m.reply(text)
+}
+} finally {
+if (typeof plugin.after === 'function') {
+try {
+await plugin.after.call(this, m, extra)
+} catch (e) {
+console.error(e)
+}}
+if (m.corazones)
+conn.reply(m.chat, `Utilizaste *${+m.corazones}* 🤍`, m, null, fake)
+}
+break
+}}
+} catch (e) {
+console.error(e)
+} finally {
+if (opts['queque'] && m.text) {
+const quequeIndex = this.msgqueque.indexOf(m.id || m.key.id)
+if (quequeIndex !== -1)
+                this.msgqueque.splice(quequeIndex, 1)
+}
+let user, stats = global.db.data.stats
+if (m) { let utente = global.db.data.users[m.sender]
+if (utente.muto == true) {
+let bang = m.key.id
+let cancellazzione = m.key.participant
+await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: cancellazzione }})
+}
+if (m.sender && (user = global.db.data.users[m.sender])) {
+user.exp += m.exp
+user.corazones -= m.corazones * 1
+}
+
+let stat
+if (m.plugin) {
+let now = +new Date
+if (m.plugin in stats) {
+stat = stats[m.plugin]
+if (!isNumber(stat.total))
+stat.total = 1
+if (!isNumber(stat.success))
+stat.success = m.error != null ? 0 : 1
+if (!isNumber(stat.last))
+stat.last = now
+if (!isNumber(stat.lastSuccess))
+stat.lastSuccess = m.error != null ? 0 : now
+} else
+stat = stats[m.plugin] = {
+total: 1,
+success: m.error != null ? 0 : 1,
+last: now,
+lastSuccess: m.error != null ? 0 : now
+}
+stat.total += 1
+stat.last = now
+if (m.error == null) {
+stat.success += 1
+stat.lastSuccess = now
+}}}
+
+try {
+if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
+} catch (e) { 
+console.log(m, m.quoted, e)}
+let settingsREAD = global.db.data.settings[this.user.jid] || {}  
+if (opts['autoread']) await this.readMessages([m.key])
+if (settingsREAD.autoread2) await this.readMessages([m.key])  
+// if (settingsREAD.autoread2 == 'true') await this.readMessages([m.key])    
+// await conn.sendPresenceUpdate('composing', m.chat)
+// this.sendPresenceUpdate('recording', m.chat)
+
+if (db.data.chats[m.chat].reaction && m.text.match(/(ción|dad|aje|oso|izar|mente|pero|tion|age|ous|ate|and|but|ify|ai|yaemori|a|s)/gi)) {
+let emot = pickRandom(["🍟", "😃", "😄", "😁", "😆", "🍓", "😅", "😂", "🤣", "🥲", "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "🌺", "🌸", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🌟", "🤓", "😎", "🥸", "🤩", "🥳", "😏", "💫", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "🤯", "😳", "🥵", "🥶", "😶‍🌫️", "😱", "😨", "😰", "😥", "😓", "🤗", "🤔", "🫣", "🤭", "🤖", "🍭", "🤫", "🫠", "🤥", "😶", "📇", "😐", "💧", "😑", "🫨", "😬", "🙄", "😯", "😦", "😧", "😮", "😲", "🥱", "😴", "🤤", "😪", "😮‍💨", "😵", "😵‍💫", "🤐", "🥴", "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤑", "🤠", "😈", "👿", "👺", "🧿", "🌩", "👻", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾", "🫶", "👍", "✌️", "🙏", "🫵", "🤏", "🤌", "☝️", "🖕", "🙏", "🫵", "🫂", "🐱", "🤹‍♀️", "🤹‍♂️", "🗿", "✨", "⚡", "🔥", "🌈", "🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜", "🖤", "🩶", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "❣️", "💕", "💞", "💓", "💗", "💖", "💘", "💝", "🚩", "👊", "⚡️", "💋", "🫰", "💅", "👑", "🐣", "🐤", "🐈"])
+if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key }})
+}
+function pickRandom(list) { return list[Math.floor(Math.random() * list.length)]}
+}}
+
+export async function deleteUpdate(message) {
+try {
+const { fromMe, id, participant } = message
+if (fromMe) return 
+let msg = this.serializeM(this.loadMessage(id))
+let chat = global.db.data.chats[msg?.chat] || {}
+if (!chat?.delete) return 
+if (!msg) return 
+if (!msg?.isGroup) return 
+const antideleteMessage = `╭•┈•〘❌ 𝗔𝗡𝗧𝗜 𝗗𝗘𝗟𝗘𝗧𝗘 ❌〙•┈• ◊
+│❒ 𝗨𝗦𝗨𝗔𝗥𝗜𝗢:
+│• @${participant.split`@`[0]}
+│
+│❒ 𝗔𝗰𝗮𝗯𝗮 𝗱𝗲 𝗲𝗹𝗶𝗺𝗶𝗻𝗮𝗿 𝘂𝗻 𝗺𝗲𝗻𝘀𝗮𝗷𝗲
+│𝗿𝗲𝗲𝗻𝘃𝗶𝗮𝗻𝗱𝗼... ⏱️
+╰•┈•〘❌ 𝗔𝗡𝗧𝗜 𝗗𝗘𝗟𝗘𝗧𝗘 ❌〙•┈• ◊`.trim();
+await this.sendMessage(msg.chat, {text: antideleteMessage, mentions: [participant]}, {quoted: msg})
+this.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
+} catch (e) {
+console.error(e)
+}}
+
+global.dfail = (type, m, conn) => {
+const msg = {
+rowner: ':⁖֟⊱┈֟፝❥ ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆ s᥆ᥣ᥆ ᥣ᥆ ⍴ᥙᥱძᥱ ᥙ𝗍іᥣіzᥲr ᥱᥣ ⍴r᥆⍴іᥱ𝗍ᥲrі᥆ ძᥱᥣ ᑲ᥆𝗍.',
+owner: ':⁖֟⊱┈֟፝❥ ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆ s᥆ᥣ᥆ sᥱ ⍴ᥙᥱძᥱ ᥙsᥲr ⍴᥆r ᥱᥣ ⍴r᥆⍴іᥱ𝗍ᥲrі᥆ ძᥱᥣ ᑲ᥆𝗍.',
+mods: ':⁖֟⊱┈֟፝❥ ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆ s᥆ᥣ᥆ sᥱ ⍴ᥙᥱძᥱ ᥙsᥲr ⍴᥆r ᥱᥣ ⍴r᥆⍴іᥱ𝗍ᥲrі᥆ ძᥱᥣ ᑲ᥆𝗍.',
+premium: ':⁖֟⊱┈֟፝❥ ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆ s᥆ᥣ᥆ sᥱ ⍴ᥙᥱძᥱ ᥙ𝗍іᥣіzᥲr ⍴᥆r ᥙsᥙᥲrі᥆s ⍴rᥱmіᥙm, ᥡ ⍴ᥲrᥲ mі ᥴrᥱᥲძ᥆r.',
+group: ':⁖֟⊱┈֟፝❥ ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆ s᥆ᥣ᥆ sᥱ ⍴ᥙᥱძᥱ ᥙsᥲr ᥱᥒ grᥙ⍴᥆s.',
+private: ':⁖֟⊱┈֟፝❥ ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆ s᥆ᥣ᥆ sᥱ ⍴ᥙᥱძᥱ ᥙsᥲr ᥲᥣ ᥴһᥲ𝗍 ⍴rі᥎ᥲძ᥆ ძᥱᥣ ᑲ᥆𝗍.',
+admin: ':⁖֟⊱┈֟፝❥ ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆ s᥆ᥣ᥆ ᥱs ⍴ᥲrᥲ ᥲძmіᥒs ძᥱᥣ grᥙ⍴᥆.',
+botAdmin: ':⁖֟⊱┈֟፝❥ ⍴ᥲrᥲ ⍴᥆ძᥱr ᥙsᥲr ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆ ᥱs ᥒᥱᥴᥱsᥲrі᥆ 𝗊ᥙᥱ ᥡ᥆ sᥱᥲ ᥲძmіᥒ.',
+unreg: ':⁖֟⊱┈֟፝❥ ᥒᥱᥴᥱsі𝗍ᥲs ᥱs𝗍ᥲr rᥱgіs𝗍rᥲძ᥆(ᥲ) ⍴ᥲrᥲ ᥙsᥲr ᥱs𝗍ᥱ ᥴ᥆mᥲᥒძ᥆, ᥱsᥴrіᑲᥱ #rᥱg ⍴ᥲrᥲ rᥱgіs𝗍rᥲr𝗍ᥱ.',
+restrict: ':⁖֟⊱┈֟፝❥ ᥴ᥆mᥲᥒძ᥆ rᥱs𝗍rіᥒgіძ᥆ ⍴᥆r ძᥱᥴіsі᥆ᥒ ძᥱᥣ ⍴r᥆⍴іᥱ𝗍ᥲrі᥆ ძᥱᥣ ᑲ᥆𝗍.',
+}[type];
+if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'))}
+
+let file = global.__filename(import.meta.url, true)
+watchFile(file, async () => {
+unwatchFile(file)
+console.log(chalk.magenta("Se actualizo 'handler.js'"))
+//if (global.reloadHandler) console.log(await global.reloadHandler())
+
+if (global.conns && global.conns.length > 0 ) {
+const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn)])];
+for (const userr of users) {
+userr.subreloadHandler(false)
+}}});
