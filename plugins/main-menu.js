@@ -33,6 +33,7 @@ const emojis = {
   "rpg": "🌵",
   "nable": "🍚",
   "start": "🪴",
+  "stalk": "🫐",
   "sticker": "🫓",
   "dl": "🍄",
   "ai": "🧋",
@@ -45,7 +46,7 @@ const emojis = {
   "internet": "🍟",
   "anime": "🥞",
   "ephoto": "🍦",
-  "group": "☕",
+  "grupo": "☕",
   "owner": "🧇",
   "nsfw": "🪼",
 };
@@ -58,7 +59,6 @@ const defaultMenu = {
 🍫 *𝖯𝗋𝖾𝖿𝗂𝗃𝗈 ➫* _\`< %_p >\`_  
 🍩 *𝖴𝗌𝗎𝖺𝗋𝗂𝗈𝗌 ➫* _\`[ %totalreg ]\`_  
 🍜 *𝖢𝗈𝗆𝖺𝗇𝖽𝗈𝗌 ➫*  _\`[ %totalf ]\`_
-
  %readmore
   `.trimStart(),
   header: '%category\n',
@@ -76,6 +76,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname, args, command }) => {
     "rpg": "𓂂𓏸  𐅹੭੭   *`𝖱𝗉𝗀`* 🌵 ᦡᦡ",
     "nable": "𓂂𓏸  𐅹੭੭   *`𝖮𝗇-𝖮ẜẜ`* 🍚 ᦡᦡ",
     "start": "𓂂𓏸  𐅹੭੭   *`𝖲ƚ𝖺ꭇƚ`* 🪴 ᦡᦡ",
+    "stalk": "𓂂𓏸  𐅹੭੭   *`𝖲ƚ𝖺𝗅𝗄ᧉꭇ`* 🫐 ᦡᦡ",
     "sticker": "𓂂𓏸  𐅹੭੭   *`𝖲ƚ𝗂𝖼𝗄ᧉꭇ`* 🫓 ᦡᦡ",
     "dl": "𓂂𓏸  𐅹੭੭   *`𝖣ᨣ𝗐𝗇𝗅ᨣ𝖺𝖽ᧉꭇ𝗌`* 🍄 ᦡᦡ",
     "ai": "𓂂𓏸  𐅹੭੭   *`𝖨𝗇ƚᧉ𝖨ı𝗀ᧉ𝗇𝖼ı𝖺𝗌`* 🧋 ᦡᦡ",
@@ -88,7 +89,7 @@ let handler = async (m, { conn, usedPrefix: _p, __dirname, args, command }) => {
     "internet": "𓂂𓏸  𐅹੭੭   *`𝖨𝗇ƚᧉꭇ𝗇ᧉƚ`* 🍟 ᦡᦡ",
     "anime": "𓂂𓏸  𐅹੭੭   *`𝖠𝗇ı𝗆ᧉ`* 🥞 ᦡᦡ",
     "ephoto": "𓂂𓏸  𐅹੭੭   *`𝖨𝗆𝗀-ƚᧉ𝗑ƚᨣ`* 🍦ᦡᦡ",
-    "group": "𓂂𓏸  𐅹੭੭   *`Gꭇ𝗎𝗉ᨣ𝗌`* ☕ ᦡᦡ",
+    "grupo": "𓂂𓏸  𐅹੭੭   *`Gꭇ𝗎𝗉ᨣ𝗌`* ☕ ᦡᦡ",
     "owner": "𓂂𓏸  𐅹੭੭   *`Oɯ𝗇ᧉꭇ`* 🧇 ᦡᦡ",
     "nsfw": "𓂂𓏸  𐅹੭੭   *`𝖭𝗌ẜɯ`* 🪼 ᦡᦡ",
   }
@@ -260,27 +261,34 @@ let totalf = Object.values(global.plugins).reduce((total, plugin) => {
   ].getRandom()
 
     await m.react('🤍')
-    await conn.sendMessage(m.chat, {
-      image: { url: img },
-      caption: estilo(text),
-      footer: dev,
-      buttons: [
-        {
-          buttonId: `.ping`,
-          buttonText: {
-            displayText: 'ᯓᡣ𐭩 ⍴іᥒg',
-          },
-        },
-        {
-          buttonId: `.owner`,
-          buttonText: {
-            displayText: 'ᯓᡣ𐭩 ᥆ᥕᥒᥱr',
-          },
-        },
-      ],
-      viewOnce: true,
-      headerType: 4,
-    }, { quoted: m })
+await conn.sendMessage(m.chat, {
+  image: { url: img },
+  caption: estilo(text),
+  footer: dev,
+  buttons: [
+    {
+      buttonId: `.ping`,
+      buttonText: {
+        displayText: '📶 Ping',
+      },
+    },
+    {
+      buttonId: `.owner`,
+      buttonText: {
+        displayText: '📞 Owner',
+      },
+    },
+  ],
+  contextInfo: {
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: channelRD.id,
+      newsletterName: channelRD.name,
+    },
+  },
+  viewOnce: true,
+  headerType: 4,
+}, { quoted: m });
   } catch (e) {
     conn.reply(m.chat, ' error', m)
     throw e
