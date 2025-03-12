@@ -3,7 +3,7 @@
 - Welcome con imagen Card
 - https://whatsapp.com/channel/0029VaJxgcB0bIdvuOwKTM2Y
 */
-import { WAMessageStubType } from '@whiskeysockets/baileys';
+/* import { WAMessageStubType } from '@whiskeysockets/baileys';
 import fetch from 'node-fetch';
 import canvafy from 'canvafy';
 
@@ -82,4 +82,4 @@ export async function before(m, { conn, participants, groupMetadata }) {
 
     await conn.sendAi(m.chat, botname, dev, kick, img, img, web, null);
   }
-}
+} */
