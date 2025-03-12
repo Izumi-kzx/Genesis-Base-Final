@@ -28,7 +28,7 @@ var handler = async (m, { conn, participants, usedPrefix, command }) => {
 };
 
 handler.help = ['kick *<@user | responder>*'];
-handler.tags = ['grupo'];
+handler.tags = ['group'];
 handler.command = ['kick', 'ban']
 handler.admin = true;
 handler.group = true;
